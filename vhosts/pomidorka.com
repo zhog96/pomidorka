@@ -1,5 +1,5 @@
 upstream backend {
-    server  pomidorka.com:8000 max_fails=3;
+    server  pomidorka.com:5000 max_fails=3;
 }
 
 server {

@@ -1,3 +1,4 @@
+instance/config.py
 node_modules/
 venv/
 *.pyc

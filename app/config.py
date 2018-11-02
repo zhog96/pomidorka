@@ -1,0 +1,5 @@
+DB_NAME = 'test'      
+DB_HOST = 'localhost'
+DB_USER = 'postgres'
+DB_PORT = '5678'
+DB_PASS = 'qwerty'
