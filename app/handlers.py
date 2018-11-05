@@ -1,52 +1,74 @@
-from flask import request, jsonify, abort
+from flask import request, jsonify, abort, Response
 from . import model
 from . import app
+from . import jsonrpc
+from flask_jsonrpc.exceptions import *
 
-def _tryNone(param):
-    param = request.args.get(param)
+
+def tryNone(param):
     if param is None:
-        abort(400)
+        raise InvalidParamsError()
     return param
 
 def tryString(param):
-    return _tryNone(param)
+    return tryNone(param)
 
 def tryInt(param):
-    param = _tryNone(param)
+    param = tryNone(param)
     try:
         param = int(param)
     except ValueError:
-        abort(400)
+        raise InvalidParamsError()
     return param
 
 def tryIntMoreThen(param, moreThen):
     param = tryInt(param)
     if param <= moreThen:
-        abort(400)
+        raise InvalidParamsError()
     return param
 
-@app.route('/api/messages/', methods = ['POST'])
-def messages():
-    chat_id = tryIntMoreThen('chat_id', 0)
-    limit = tryIntMoreThen('limit', 0)
-    messages = model.list_messages_by_chat(chat_id, limit)
-    return jsonify(messages)
-
-@app.route('/api/user/', methods = ['POST'])
-def user():
-    user_id = tryIntMoreThen('user_id', 0)
-    user = model.search_user(user_id)
-    return jsonify(user)
+@app.route('/api/', methods = ['POST', 'GET'])
+def index():
+    req = request.get_data().decode()
+    print(req)
+    response = dispatch(req)
     
-@app.route('/api/chats/', methods = ['POST'])
-def chats():
-    limit = tryIntMoreThen('limit', 0)
+    return Response(str(response), response.http_status, mimetype='application/json')
+
+@jsonrpc.method('messages')
+def messages(chat_id, limit):
+    chat_id = tryIntMoreThen(chat_id, 0)
+    limit = tryIntMoreThen(limit, 0)
+    messages = model.list_messages_by_chat(chat_id, limit)
+    return jsonify(messages).json
+
+@jsonrpc.method('user')
+def user(user_id):
+    user_id = tryIntMoreThen(user_id, 0)
+    user = model.search_user(user_id)
+    return jsonify(user).json
+    
+@jsonrpc.method('chats')
+def chats(limit):
+    limit = tryIntMoreThen(limit, 0)
     chats = model.list_chats(limit)
-    return jsonify(chats)
+    return jsonify(chats).json
 
-@app.route('/api/create_pers_chat/', methods = ['POST'])
-def create_pers_chat():
-    topic = tryString('topic')
+@jsonrpc.method('create_pers_chat')
+def create_pers_chat(topic):
+    topic = tryString(topic)
     e = model.create_pers_chat(topic)
-    return jsonify(e)
+    return jsonify(e).json
 
+@jsonrpc.method('read_messages')
+def read_messages(member_id):
+    memeber_id = tryIntMoreThen(member_id, 0)
+    return jsonify(model.read_messages(member_id)).json
+
+@jsonrpc.method('send_message')
+def send_message(chat_id, user_id, content):
+    chat_id = tryIntMoreThen(chat_id, 0)
+    user_id = tryIntMoreThen(user_id, 0)
+    content = tryNone(content)
+    e = model.send_message(chat_id, user_id, content)
+    return jsonify(e).json

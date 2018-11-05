@@ -33,6 +33,15 @@ def create_pers_chat(topic):
     """, topic = topic)
     db._commit_db()
 
+def send_message(chat_id, user_id, content):
+    db.execute("""
+        INSERT INTO messages (chat_id, user_id, content)
+        VALUES (%(chat_id)s, %(user_id)s, %(content)s);
+    """, chat_id = int(chat_id),
+         user_id = int(user_id),
+         content = content)
+    db._commit_db()
+
 
 
 

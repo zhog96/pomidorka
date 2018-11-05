@@ -1,5 +1,6 @@
 instance/config.py
 node_modules/
+flask-jsonrpc/
 venv/
 *.pyc
 *.swo
