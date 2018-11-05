@@ -27,14 +27,6 @@ def tryIntMoreThen(param, moreThen):
         raise InvalidParamsError()
     return param
 
-@app.route('/api/', methods = ['POST', 'GET'])
-def index():
-    req = request.get_data().decode()
-    print(req)
-    response = dispatch(req)
-    
-    return Response(str(response), response.http_status, mimetype='application/json')
-
 @jsonrpc.method('messages')
 def messages(chat_id, limit):
     chat_id = tryIntMoreThen(chat_id, 0)
