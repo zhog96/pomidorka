@@ -11,7 +11,7 @@ CREATE TABLE chats (
     chat_id SERIAL PRIMARY KEY,
     is_group_chat BOOL NOT NULL,
     topic TEXT NOT NULL
-        CHECK (length(topic) < 128),
+        CHECK (length(topic) < 128)
 );
 
 CREATE TABLE messages (
@@ -29,8 +29,7 @@ CREATE TABLE members (
         REFERENCES users(user_id),
     chat_id INTEGER NOT NULL
         REFERENCES chats(chat_id),
-    new_messages JSON NOT NULL,
-    last_read_message_id INTEGER NOT NULL
+    last_read_message_id INTEGER
         REFERENCES messages(message_id)
 );
 

@@ -43,7 +43,7 @@ class AppTest(TestCase):
 
         with self.subTest():
             rv = server.chats(limit = 100)
-            testJson = {'id': '#joker', 'jsonrpc': '2.0', 'result': [{'chat_id': 1, 'is_group_chat': True, 'last_message': None, 'topic': 'eversome chat'}]}
+            testJson = {'id': '#joker', 'jsonrpc': '2.0', 'result': [{'chat_id': 1, 'is_group_chat': True, 'topic': 'eversome chat'}]}
             self.assertTrue(compare_json_data(testJson, rv), str(testJson) + ' != ' + str(rv))
         
         with self.subTest():
@@ -107,7 +107,7 @@ class AppTest(TestCase):
             self.assertTrue(compare_json_data(testJson, rv), str(testJson) + ' != ' + str(rv))
             
             rv = server.chats(limit = 100)
-            testJson = {'id': '#joker', 'jsonrpc': '2.0', 'result': [{'chat_id': 1, 'is_group_chat': True, 'last_message': None, 'topic': 'eversome chat'}, {'chat_id': 2, 'is_group_chat': False, 'last_message': None, 'topic': 'asdasdasd'}]}
+            testJson = {'id': '#joker', 'jsonrpc': '2.0', 'result': [{'chat_id': 1, 'is_group_chat': True, 'topic': 'eversome chat'}, {'chat_id': 2, 'is_group_chat': False, 'topic': 'asdasdasd'}]}
             self.assertTrue(compare_json_data(testJson, rv), str(testJson) + ' != ' + str(rv))
 
     def test_send_message(self):
@@ -126,6 +126,51 @@ class AppTest(TestCase):
             rv = server.messages(chat_id = 1, limit = 100)
             testJson = {'id': '#joker', 'jsonrpc': '2.0', 'result': [{'added_at': '#joker', 'content': {'text': 'Hello'}, 'message_id': 4, 'name': 'Petrovich', 'nick': 'qwerty111', 'user_id': 1}, {'added_at': '#joker', 'content': {'text': '111'}, 'message_id': 1, 'name': 'Petrovich', 'nick': 'qwerty111', 'user_id': 1}, {'added_at': '#joker', 'content': {'text': '222'}, 'message_id': 2, 'name': 'DedPihto', 'nick': 'fgh5365', 'user_id': 2}]}
             self.assertTrue(compare_json_data(testJson, rv), str(testJson) + ' != ' + str(rv))
+
+    def test_member(self):
+        self.clearDB()
+
+        with self.subTest():
+            rv = server.member(chat_id = -1)
+            testJson = {'error': {'code': 500, 'data': None, 'message': "OtherError: member() missing 1 required positional argument: 'user_id'", 'name': 'OtherError'}, 'id': '#joker', 'jsonrpc': '2.0'}
+            self.assertTrue(compare_json_data(testJson, rv), str(testJson) + ' != ' + str(rv))
+
+        with self.subTest():
+            rv = server.member(chat_id = 1, user_id = 100)
+            testJson = {'id': '#joker', 'jsonrpc': '2.0', 'result': None}
+            self.assertTrue(compare_json_data(testJson, rv), str(testJson) + ' != ' + str(rv))
+
+        with self.subTest():
+            rv = server.member(chat_id = 1, user_id = 1)
+            testJson = {'id': '#joker', 'jsonrpc': '2.0', 'result': {'chat_id': 1, 'last_read_message_id': None, 'user_id': 1}}
+            self.assertTrue(compare_json_data(testJson, rv), str(testJson) + ' != ' + str(rv))
+
+        with self.subTest():
+            rv = server.member(chat_id = 1, user_id = 2)
+            testJson = {'id': '#joker', 'jsonrpc': '2.0', 'result': {'chat_id': 1, 'last_read_message_id': None, 'user_id': 2}}
+            self.assertTrue(compare_json_data(testJson, rv), str(testJson) + ' != ' + str(rv))
+
+    def test_read_messages(self):
+        self.clearDB()
+
+        with self.subTest():
+            rv = server.member(chat_id = 1, user_id = 1)
+            testJson = {'id': '#joker', 'jsonrpc': '2.0', 'result': {'chat_id': 1, 'last_read_message_id': None, 'user_id': 1}}
+            self.assertTrue(compare_json_data(testJson, rv), str(testJson) + ' != ' + str(rv))
+
+        with self.subTest():
+            rv = server.read_messages(chat_id = 1, user_id = 1)
+            testJson = {'id': '#joker', 'jsonrpc': '2.0', 'result': None}
+            self.assertTrue(compare_json_data(testJson, rv), str(testJson) + ' != ' + str(rv))
+
+            rv = server.member(chat_id = 1, user_id = 1)
+            testJson = {'id': '#joker', 'jsonrpc': '2.0', 'result': {'chat_id': 1, 'last_read_message_id': 2, 'user_id': 1}}
+            self.assertTrue(compare_json_data(testJson, rv), str(testJson) + ' != ' + str(rv))
+
+            rv = server.member(chat_id = 1, user_id = 2)
+            testJson = {'id': '#joker', 'jsonrpc': '2.0', 'result': {'chat_id': 1, 'last_read_message_id': None, 'user_id': 2}}
+            self.assertTrue(compare_json_data(testJson, rv), str(testJson) + ' != ' + str(rv))
+             
 
     def tearDown(self):
         conn = psycopg2.connect(**self.postgresql.dsn())

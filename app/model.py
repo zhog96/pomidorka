@@ -42,6 +42,26 @@ def send_message(chat_id, user_id, content):
          content = content)
     db._commit_db()
 
+def read_messages(chat_id, user_id):
+    db.execute("""
+        UPDATE members
+        SET last_read_message_id = (
+            SELECT message_id
+            FROM messages
+            WHERE chat_id = %(chat_id)s
+            ORDER BY message_id DESC
+            LIMIT 1
+        )
+        WHERE chat_id = %(chat_id)s AND user_id = %(user_id)s
+    """, chat_id = int(chat_id), user_id = int(user_id))
+    db._commit_db()
+
+def member(chat_id, user_id):
+    return db.query_one("""
+        SELECT * FROM members
+        WHERE chat_id = %(chat_id)s AND user_id = %(user_id)s
+    """, chat_id = int(chat_id), user_id = int(user_id))
+
 
 
 

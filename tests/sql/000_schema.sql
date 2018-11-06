@@ -11,8 +11,7 @@ CREATE TABLE chats (
     chat_id SERIAL PRIMARY KEY,
     is_group_chat BOOL NOT NULL,
     topic TEXT NOT NULL
-        CHECK (length(topic) < 128),
-    last_message JSONB
+        CHECK (length(topic) < 128)
 );
 
 CREATE TABLE messages (
@@ -21,7 +20,7 @@ CREATE TABLE messages (
         REFERENCES chats(chat_id),
     user_id INTEGER NOT NULL
         REFERENCES users(user_id),
-    content JSONB NOT NULL,
+    content JSON NOT NULL,
     added_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
@@ -30,21 +29,9 @@ CREATE TABLE members (
         REFERENCES users(user_id),
     chat_id INTEGER NOT NULL
         REFERENCES chats(chat_id),
-    new_messages JSONB NOT NULL,
-    last_read_message_id INTEGER NOT NULL
+    last_read_message_id INTEGER
         REFERENCES messages(message_id)
 );
 
-CREATE TABLE attachments (
-    attach_id SERIAL PRIMARY KEY,
-    chat_id INTEGER NOT NULL
-        REFERENCES chats(chat_id),
-    user_id INTEGER NOT NULL
-        REFERENCES users(user_id),
-    message_id INTEGER NOT NULL
-        REFERENCES messages(message_id),
-    type TEXT NOT NULL,
-    url TEXT NOT NULL
-);
 
 
