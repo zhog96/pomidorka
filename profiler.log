@@ -1,0 +1,94 @@
+--------------------------------------------------------------------------------
+PATH: '/api/'
+         1819 function calls (1810 primitive calls) in 0.005 seconds
+
+   Ordered by: internal time, call count
+   List reduced from 334 to 30 due to restriction <30>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.002    0.002    0.002    0.002 {built-in method psycopg2._psycopg._connect}
+        1    0.001    0.001    0.001    0.001 {function DictCursor.execute at 0x7f30c924f400}
+        4    0.000    0.000    0.000    0.000 {method 'recv' of '_socket.socket' objects}
+       57    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/werkzeug/local.py:300(_get_current_object)
+        3    0.000    0.000    0.000    0.000 /usr/lib/python3.6/json/encoder.py:204(iterencode)
+        4    0.000    0.000    0.000    0.000 {method 'sendall' of '_socket.socket' objects}
+        1    0.000    0.000    0.002    0.002 /home/zogovaleksandr/pomidorka/app/db.py:21(get_cursor)
+        1    0.000    0.000    0.000    0.000 {method 'dump' of '_pickle.Pickler' objects}
+       63    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/werkzeug/local.py:160(top)
+    66/65    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
+        1    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/flask/ctx.py:428(auto_pop)
+      256    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+    77/73    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+        1    0.000    0.000    0.000    0.000 {built-in method io.open}
+       67    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/werkzeug/local.py:68(__getattr__)
+        1    0.000    0.000    0.000    0.000 {method 'connect' of '_socket.socket' objects}
+    43/41    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/werkzeug/local.py:344(__getattr__)
+       10    0.000    0.000    0.000    0.000 {method 'sub' of '_sre.SRE_Pattern' objects}
+        1    0.000    0.000    0.000    0.000 {method 'cursor' of 'psycopg2.extensions.connection' objects}
+       60    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/psycopg2/extras.py:172(__setitem__)
+        3    0.000    0.000    0.000    0.000 /usr/lib/python3.6/json/decoder.py:345(raw_decode)
+        2    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/werkzeug/wrappers.py:830(__init__)
+        1    0.000    0.000    0.000    0.000 {function DictCursorBase.fetchall at 0x7f30c924f1e0}
+       10    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/werkzeug/http.py:757(_dump_date)
+        3    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/flask/json/__init__.py:92(_dump_arg_defaults)
+        2    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/flask/json/__init__.py:257(jsonify)
+        1    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/psycopg2/extras.py:69(__init__)
+       50    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/psycopg2/extras.py:167(__getitem__)
+       17    0.000    0.000    0.000    0.000 {method 'match' of '_sre.SRE_Pattern' objects}
+        1    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/app/db.py:37(<listcomp>)
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+PATH: '/api/'
+         1528 function calls (1514 primitive calls) in 0.027 seconds
+
+   Ordered by: internal time, call count
+   List reduced from 281 to 30 due to restriction <30>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.019    0.019    0.024    0.024 /home/zogovaleksandr/pomidorka/app/model.py:20(send_message)
+        1    0.002    0.002    0.002    0.002 {built-in method psycopg2._psycopg._connect}
+        3    0.002    0.001    0.002    0.001 {function DictCursor.execute at 0x7f30c924f400}
+        1    0.002    0.002    0.002    0.002 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/flask/ctx.py:383(pop)
+        1    0.000    0.000    0.000    0.000 {method 'commit' of 'psycopg2.extensions.connection' objects}
+        1    0.000    0.000    0.027    0.027 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/werkzeug/contrib/profiler.py:95(runapp)
+        1    0.000    0.000    0.000    0.000 {method 'recv' of '_socket.socket' objects}
+       88    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/werkzeug/local.py:160(top)
+  109/105    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+    96/91    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
+       82    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/werkzeug/local.py:300(_get_current_object)
+       92    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/werkzeug/local.py:68(__getattr__)
+        2    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/psycopg2/extensions.py:173(<listcomp>)
+    63/61    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/werkzeug/local.py:344(__getattr__)
+        1    0.000    0.000    0.000    0.000 {method 'connect' of '_socket.socket' objects}
+       10    0.000    0.000    0.000    0.000 {method 'sub' of '_sre.SRE_Pattern' objects}
+        3    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/flask/json/__init__.py:257(jsonify)
+        2    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/psycopg2/extensions.py:148(make_dsn)
+        1    0.000    0.000    0.005    0.005 /home/zogovaleksandr/pomidorka/app/model.py:70(send_message_nocache)
+        4    0.000    0.000    0.000    0.000 /usr/lib/python3.6/json/encoder.py:204(iterencode)
+        1    0.000    0.000    0.000    0.000 {method 'close' of 'psycopg2.extensions.connection' objects}
+        4    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/flask/json/__init__.py:92(_dump_arg_defaults)
+      113    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+        3    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/werkzeug/wrappers.py:830(__init__)
+        3    0.000    0.000    0.002    0.001 /home/zogovaleksandr/pomidorka/app/db.py:8(get_connection)
+        2    0.000    0.000    0.000    0.000 {built-in method psycopg2._psycopg.parse_dsn}
+       13    0.000    0.000    0.000    0.000 {method 'match' of '_sre.SRE_Pattern' objects}
+        6    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/werkzeug/datastructures.py:1187(set)
+        3    0.000    0.000    0.000    0.000 /home/zogovaleksandr/pomidorka/venv/lib/python3.6/site-packages/psycopg2/extras.py:69(__init__)
+        3    0.000    0.000    0.000    0.000 /usr/lib/python3.6/json/decoder.py:283(__init__)
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+PATH: '/api/'
+         1725 function calls (1716 primitive calls) in 0.006 seconds
+
+   Ordered by: internal time, call count
+   List reduced from 297 to 30 due to restriction <30>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.002    0.002    0.002    0.002 {built-in method psycopg2._psycopg._connect}
+        1    0.001

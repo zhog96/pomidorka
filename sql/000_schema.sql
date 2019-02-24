@@ -20,17 +20,24 @@ CREATE TABLE messages (
         REFERENCES chats(chat_id),
     user_id INTEGER NOT NULL
         REFERENCES users(user_id),
-    content JSON NOT NULL,
     added_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE members (
+    member_id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL
         REFERENCES users(user_id),
     chat_id INTEGER NOT NULL
         REFERENCES chats(chat_id),
     last_read_message_id INTEGER
         REFERENCES messages(message_id)
+);
+
+CREATE TABLE attachs (
+    attach_id SERIAL PRIMARY KEY,
+    message_id INTEGER NOT NULL
+        REFERENCES messages(message_id),
+    data TEXT NOT NULL
 );
 
 

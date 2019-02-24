@@ -1,0 +1,546 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 10.6 (Ubuntu 10.6-0ubuntu0.18.04.1)
+-- Dumped by pg_dump version 10.6 (Ubuntu 10.6-0ubuntu0.18.04.1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: attachs; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.attachs (
+    attach_id integer NOT NULL,
+    message_id integer NOT NULL,
+    data text NOT NULL
+);
+
+
+ALTER TABLE public.attachs OWNER TO postgres;
+
+--
+-- Name: attachs_attach_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.attachs_attach_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.attachs_attach_id_seq OWNER TO postgres;
+
+--
+-- Name: attachs_attach_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.attachs_attach_id_seq OWNED BY public.attachs.attach_id;
+
+
+--
+-- Name: chats; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.chats (
+    chat_id integer NOT NULL,
+    is_group_chat boolean NOT NULL,
+    topic text NOT NULL,
+    CONSTRAINT chats_topic_check CHECK ((length(topic) < 128))
+);
+
+
+ALTER TABLE public.chats OWNER TO postgres;
+
+--
+-- Name: chats_chat_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.chats_chat_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.chats_chat_id_seq OWNER TO postgres;
+
+--
+-- Name: chats_chat_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.chats_chat_id_seq OWNED BY public.chats.chat_id;
+
+
+--
+-- Name: members; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.members (
+    member_id integer NOT NULL,
+    user_id integer NOT NULL,
+    chat_id integer NOT NULL,
+    last_read_message_id integer
+);
+
+
+ALTER TABLE public.members OWNER TO postgres;
+
+--
+-- Name: members_member_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.members_member_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.members_member_id_seq OWNER TO postgres;
+
+--
+-- Name: members_member_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.members_member_id_seq OWNED BY public.members.member_id;
+
+
+--
+-- Name: messages; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.messages (
+    message_id integer NOT NULL,
+    chat_id integer NOT NULL,
+    user_id integer NOT NULL,
+    added_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.messages OWNER TO postgres;
+
+--
+-- Name: messages_message_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.messages_message_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.messages_message_id_seq OWNER TO postgres;
+
+--
+-- Name: messages_message_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.messages_message_id_seq OWNED BY public.messages.message_id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users (
+    user_id integer NOT NULL,
+    nick text NOT NULL,
+    name text NOT NULL,
+    avatar text,
+    CONSTRAINT users_name_check CHECK ((length(name) < 32)),
+    CONSTRAINT users_nick_check CHECK ((length(nick) < 32))
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.users_user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_user_id_seq OWNER TO postgres;
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.users_user_id_seq OWNED BY public.users.user_id;
+
+
+--
+-- Name: attachs attach_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.attachs ALTER COLUMN attach_id SET DEFAULT nextval('public.attachs_attach_id_seq'::regclass);
+
+
+--
+-- Name: chats chat_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.chats ALTER COLUMN chat_id SET DEFAULT nextval('public.chats_chat_id_seq'::regclass);
+
+
+--
+-- Name: members member_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.members ALTER COLUMN member_id SET DEFAULT nextval('public.members_member_id_seq'::regclass);
+
+
+--
+-- Name: messages message_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.messages ALTER COLUMN message_id SET DEFAULT nextval('public.messages_message_id_seq'::regclass);
+
+
+--
+-- Name: users user_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.users_user_id_seq'::regclass);
+
+
+--
+-- Data for Name: attachs; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.attachs (attach_id, message_id, data) FROM stdin;
+1	1	Hello
+2	2	Hello
+3	3	Hello
+4	4	Hello
+5	5	Hello
+6	6	Hello
+7	7	Hello
+8	8	Hello
+9	9	Hello
+10	10	Hello
+11	11	Hello
+12	12	Hello
+13	13	Hello
+14	14	Hello
+15	15	Hello
+16	16	Hello
+17	17	Hello
+18	18	Hello
+19	19	Hello
+20	20	Hello
+21	21	Hello
+22	22	Hello
+23	23	Hello
+24	24	Hello
+25	25	Hello
+26	26	Hello
+27	27	Hello
+28	28	Hello
+29	29	Hello
+30	30	Hello
+31	31	Hello
+32	32	Hello
+33	33	Hello
+34	34	Hello
+35	35	Hello
+36	36	Hello
+37	37	Hello
+38	38	Hello
+39	39	Hello
+40	40	Hello
+41	41	Hello
+42	42	Hello
+43	43	Hello
+44	44	Hello
+45	45	Hello
+46	46	Hello
+47	47	Hello
+48	48	Hello
+49	49	Hello
+50	50	Hello
+\.
+
+
+--
+-- Data for Name: chats; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.chats (chat_id, is_group_chat, topic) FROM stdin;
+1	f	P-F
+2	f	F-S
+3	f	S-K
+4	f	K-D
+5	f	D-P
+\.
+
+
+--
+-- Data for Name: members; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.members (member_id, user_id, chat_id, last_read_message_id) FROM stdin;
+1	1	1	\N
+2	2	1	\N
+3	2	2	\N
+4	3	2	\N
+5	3	3	\N
+6	4	3	\N
+7	4	4	\N
+8	5	4	\N
+9	5	5	\N
+10	1	5	\N
+\.
+
+
+--
+-- Data for Name: messages; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.messages (message_id, chat_id, user_id, added_at) FROM stdin;
+1	1	1	2019-02-24 15:26:08.867237
+2	1	1	2019-02-24 15:26:08.867237
+3	1	1	2019-02-24 15:26:08.867237
+4	1	1	2019-02-24 15:26:08.867237
+5	1	1	2019-02-24 15:26:08.867237
+6	1	2	2019-02-24 15:26:08.867237
+7	1	2	2019-02-24 15:26:08.867237
+8	1	2	2019-02-24 15:26:08.867237
+9	1	2	2019-02-24 15:26:08.867237
+10	1	2	2019-02-24 15:26:08.867237
+11	2	2	2019-02-24 15:26:08.867237
+12	2	2	2019-02-24 15:26:08.867237
+13	2	2	2019-02-24 15:26:08.867237
+14	2	2	2019-02-24 15:26:08.867237
+15	2	2	2019-02-24 15:26:08.867237
+16	2	3	2019-02-24 15:26:08.867237
+17	2	3	2019-02-24 15:26:08.867237
+18	2	3	2019-02-24 15:26:08.867237
+19	2	3	2019-02-24 15:26:08.867237
+20	2	3	2019-02-24 15:26:08.867237
+21	3	3	2019-02-24 15:26:08.867237
+22	3	3	2019-02-24 15:26:08.867237
+23	3	3	2019-02-24 15:26:08.867237
+24	3	3	2019-02-24 15:26:08.867237
+25	3	3	2019-02-24 15:26:08.867237
+26	3	4	2019-02-24 15:26:08.867237
+27	3	4	2019-02-24 15:26:08.867237
+28	3	4	2019-02-24 15:26:08.867237
+29	3	4	2019-02-24 15:26:08.867237
+30	3	4	2019-02-24 15:26:08.867237
+31	4	4	2019-02-24 15:26:08.867237
+32	4	4	2019-02-24 15:26:08.867237
+33	4	4	2019-02-24 15:26:08.867237
+34	4	4	2019-02-24 15:26:08.867237
+35	4	4	2019-02-24 15:26:08.867237
+36	4	5	2019-02-24 15:26:08.867237
+37	4	5	2019-02-24 15:26:08.867237
+38	4	5	2019-02-24 15:26:08.867237
+39	4	5	2019-02-24 15:26:08.867237
+40	4	5	2019-02-24 15:26:08.867237
+41	5	5	2019-02-24 15:26:08.867237
+42	5	5	2019-02-24 15:26:08.867237
+43	5	5	2019-02-24 15:26:08.867237
+44	5	5	2019-02-24 15:26:08.867237
+45	5	5	2019-02-24 15:26:08.867237
+46	5	1	2019-02-24 15:26:08.867237
+47	5	1	2019-02-24 15:26:08.867237
+48	5	1	2019-02-24 15:26:08.867237
+49	5	1	2019-02-24 15:26:08.867237
+50	5	1	2019-02-24 15:26:08.867237
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.users (user_id, nick, name, avatar) FROM stdin;
+1	qwerty111	Petrovich	\N
+2	kokoko123	Fridrih	\N
+3	azino777	Sergey	\N
+4	sdfgldmkn12345	Kdknvf	\N
+5	fgh5365	DedPihto	\N
+\.
+
+
+--
+-- Name: attachs_attach_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.attachs_attach_id_seq', 50, true);
+
+
+--
+-- Name: chats_chat_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.chats_chat_id_seq', 5, true);
+
+
+--
+-- Name: members_member_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.members_member_id_seq', 10, true);
+
+
+--
+-- Name: messages_message_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.messages_message_id_seq', 50, true);
+
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.users_user_id_seq', 5, true);
+
+
+--
+-- Name: attachs attachs_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.attachs
+    ADD CONSTRAINT attachs_pkey PRIMARY KEY (attach_id);
+
+
+--
+-- Name: chats chats_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.chats
+    ADD CONSTRAINT chats_pkey PRIMARY KEY (chat_id);
+
+
+--
+-- Name: members members_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.members
+    ADD CONSTRAINT members_pkey PRIMARY KEY (member_id);
+
+
+--
+-- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.messages
+    ADD CONSTRAINT messages_pkey PRIMARY KEY (message_id);
+
+
+--
+-- Name: users users_nick_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_nick_key UNIQUE (nick);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+
+
+--
+-- Name: attachs attachs_message_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.attachs
+    ADD CONSTRAINT attachs_message_id_fkey FOREIGN KEY (message_id) REFERENCES public.messages(message_id);
+
+
+--
+-- Name: members members_chat_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.members
+    ADD CONSTRAINT members_chat_id_fkey FOREIGN KEY (chat_id) REFERENCES public.chats(chat_id);
+
+
+--
+-- Name: members members_last_read_message_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.members
+    ADD CONSTRAINT members_last_read_message_id_fkey FOREIGN KEY (last_read_message_id) REFERENCES public.messages(message_id);
+
+
+--
+-- Name: members members_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.members
+    ADD CONSTRAINT members_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+
+
+--
+-- Name: messages messages_chat_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.messages
+    ADD CONSTRAINT messages_chat_id_fkey FOREIGN KEY (chat_id) REFERENCES public.chats(chat_id);
+
+
+--
+-- Name: messages messages_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.messages
+    ADD CONSTRAINT messages_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

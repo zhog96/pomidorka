@@ -1,16 +1,21 @@
 import psycopg2
 import psycopg2.extras
 import flask
-from . import config
+import json
+from . import app
+from . import jsonrpc
 
 def get_connection():
+    if not hasattr(app, 'db_config'):
+        file = open('app/config.json')
+        app.db_config = json.load(file)
     if not hasattr(flask.g, 'dbconn'):
         flask.g.dbconn = psycopg2.connect(
-            database = config.DB_NAME,        
-            host     = config.DB_HOST,
-            user     = config.DB_USER,
-            port     = config.DB_PORT,
-            password = config.DB_PASS)
+            database = app.db_config['db']['name'],        
+            host     = app.db_config['db']['host'],
+            user     = app.db_config['db']['user'],
+            port     = app.db_config['db']['port'],
+            password = app.db_config['db']['password'])
     return flask.g.dbconn
 
 def get_cursor():
@@ -36,19 +41,23 @@ def execute(sql, **params):
         cur.execute(sql, params)
 
 
-def _rollback_db(sender, exception, **extra):
+def commit():
+	if hasattr(flask.g,'dbconn'):
+		conn = flask.g.dbconn
+		conn.commit()
+		close()
+
+def rollback():
+	if hasattr(flask.g,'dbconn'):
+		conn = flask.g.dbconn
+		conn.rollback()
+		close()
+
+def close():
     if hasattr(flask.g, 'dbconn'):
         conn = flask.g.dbconn
-        conn.rollback()
         conn.close()
         delattr(flask.g, 'dbconn')
-
-def _commit_db():
-    if hasattr(flask.g, 'dbconn'):
-        conn = flask.g.dbconn
-        conn.commit()
-
-
 
 
 

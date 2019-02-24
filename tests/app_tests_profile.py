@@ -5,6 +5,7 @@ import psycopg2
 import json
 from flask_jsonrpc.proxy import ServiceProxy
 import subprocess
+import time
 
 from app import app
 
@@ -24,9 +25,9 @@ class AppTest(TestCase):
             self.sql_fill = config['db']['sql_fill']
             self.sql_del = config['db']['sql_del']
 
+            #self.runScript(self.sql_del, conn)
             self.runScript(self.sql_set_up, conn)
             self.runScript(self.sql_fill, conn)
-            #self.runScript(self.sql_del, conn)
             self.app = app.test_client()
     
         def refresh(self):
@@ -48,7 +49,43 @@ class AppTest(TestCase):
             cursor.execute(sql) 
             connection.commit() 
             file.close() 
- 
+
+# Here! 
+    def test_profile(self):
+        self.db.refresh()
+
+        with self.subTest():
+            result = server.messages(chat_id = 1, limit = 100)
+            test_json = {'id': '#joker', 'jsonrpc': '2.0', 'result': [      {'added_at': '#joker',
+ 'message_id': 5,  'name': 'Petrovich', 'nick': 'qwerty111', 'user_id': 1}, {'added_at': '#joker',
+ 'message_id': 4,  'name': 'Petrovich', 'nick': 'qwerty111', 'user_id': 1}, {'added_at': '#joker',
+ 'message_id': 3,  'name': 'Petrovich', 'nick': 'qwerty111', 'user_id': 1}, {'added_at': '#joker',
+ 'message_id': 2,  'name': 'Petrovich', 'nick': 'qwerty111', 'user_id': 1}, {'added_at': '#joker',
+ 'message_id': 1,  'name': 'Petrovich', 'nick': 'qwerty111', 'user_id': 1}, {'added_at': '#joker',
+ 'message_id': 10, 'name': 'Fridrih',   'nick': 'kokoko123', 'user_id': 2}, {'added_at': '#joker',
+ 'message_id': 9,  'name': 'Fridrih',   'nick': 'kokoko123', 'user_id': 2}, {'added_at': '#joker',
+ 'message_id': 8,  'name': 'Fridrih',   'nick': 'kokoko123', 'user_id': 2}, {'added_at': '#joker',
+ 'message_id': 7,  'name': 'Fridrih',   'nick': 'kokoko123', 'user_id': 2}, {'added_at': '#joker',
+ 'message_id': 6,  'name': 'Fridrih',   'nick': 'kokoko123', 'user_id': 2}]}
+            self.assertTrue(compare_json_data(test_json, result), str(test_json) + ' != ' + str(result))
+
+        with self.subTest():
+            server.send_message(1, 1, ['Balalayka'])
+            result = server.messages(chat_id = 1, limit = 100)
+            test_json = {'id': '#joker', 'jsonrpc': '2.0', 'result': [      {'added_at': '#joker',
+ 'message_id': 51, 'name': 'Petrovich', 'nick': 'qwerty111', 'user_id': 1}, {'added_at': '#joker',
+ 'message_id': 5,  'name': 'Petrovich', 'nick': 'qwerty111', 'user_id': 1}, {'added_at': '#joker',
+ 'message_id': 4,  'name': 'Petrovich', 'nick': 'qwerty111', 'user_id': 1}, {'added_at': '#joker',
+ 'message_id': 3,  'name': 'Petrovich', 'nick': 'qwerty111', 'user_id': 1}, {'added_at': '#joker',
+ 'message_id': 2,  'name': 'Petrovich', 'nick': 'qwerty111', 'user_id': 1}, {'added_at': '#joker',
+ 'message_id': 1,  'name': 'Petrovich', 'nick': 'qwerty111', 'user_id': 1}, {'added_at': '#joker',
+ 'message_id': 10, 'name': 'Fridrih',   'nick': 'kokoko123', 'user_id': 2}, {'added_at': '#joker',
+ 'message_id': 9,  'name': 'Fridrih',   'nick': 'kokoko123', 'user_id': 2}, {'added_at': '#joker',
+ 'message_id': 8,  'name': 'Fridrih',   'nick': 'kokoko123', 'user_id': 2}, {'added_at': '#joker',
+ 'message_id': 7,  'name': 'Fridrih',   'nick': 'kokoko123', 'user_id': 2}, {'added_at': '#joker',
+ 'message_id': 6,  'name': 'Fridrih',   'nick': 'kokoko123', 'user_id': 2}]}
+            self.assertTrue(compare_json_data(test_json, result), str(test_json) + ' != ' + str(result))
+           
     def setUp(self):
         file = open('tests/config.json', 'r')
         
@@ -63,29 +100,7 @@ class AppTest(TestCase):
         file = open('app/config.json', 'w')
         json.dump(db_config, file)
         file.close()
-
-    def test_read_messages(self):
-        self.db.refresh()
-
-        with self.subTest():
-            result = server.member(chat_id = 1, user_id = 1)
-            test_json = {'id': '#joker', 'jsonrpc': '2.0', 'result': {'chat_id': 1, 'last_read_message_id': None, 'user_id': 1, 'member_id': '#joker'}}
-            self.assertTrue(compare_json_data(test_json, result), str(test_json) + ' != ' + str(result))
-        return
-        with self.subTest():
-            result = server.read_messages(chat_id = 1, user_id = 1)
-            test_json = {'id': '#joker', 'jsonrpc': '2.0', 'result': None}
-            self.assertTrue(compare_json_data(test_json, result), str(test-json) + ' != ' + str(result))
-
-            result = server.member(chat_id = 1, user_id = 1)
-            test_json = {'id': '#joker', 'jsonrpc': '2.0', 'result': {'chat_id': 1, 'last_read_message_id': 2, 'user_id': 1}}
-            self.assertTrue(compare_json_data(test_json, result), str(test_json) + ' != ' + str(result))
-
-            result = server.member(chat_id = 1, user_id = 2)
-            test_json = {'id': '#joker', 'jsonrpc': '2.0', 'result': {'chat_id': 1, 'last_read_message_id': None, 'user_id': 2}}
-            self.assertTrue(compare_json_data(test_json, result), str(test_json) + ' != ' + str(result))
              
-
     def tearDown(self):
         self.db.delete();
         file = open('app/config.json', 'w')

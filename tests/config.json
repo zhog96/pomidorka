@@ -1,0 +1,13 @@
+{
+    "db": {
+        "name": "test",
+        "host": "localhost",
+        "user": "postgres",
+        "port": "5678",
+        "password": "qwerty",
+        "path": "/tmp/my_test_db",
+        "sql_set_up" : "sql/000_schema.sql",
+        "sql_fill": "sql/001_schema_data.sql",
+        "sql_del": "sql/000_schema_del.sql"
+    }
+}
